@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
     job_ttl_seconds: int = DEFAULT_JOB_TTL_SECONDS
     tool_http_timeout_seconds: float = DEFAULT_TOOL_HTTP_TIMEOUT_SECONDS
+    # Demo/dev only: allow http://localhost and private hosts for tool endpoints.
+    allow_local_tool_endpoints: bool = False
 
 
 @lru_cache

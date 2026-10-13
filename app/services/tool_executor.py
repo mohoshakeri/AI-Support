@@ -76,6 +76,8 @@ async def execute_tool_call(
     payload = _build_payload(tool, call.arguments_dict())
 
     headers = {
+        # Hyphenated form survives Django/WSGI underscore-header filtering.
+        "Support-Tool-Key": support_tool_key,
         "SUPPORT_TOOL_KEY": support_tool_key,
         "Accept": "application/json",
     }

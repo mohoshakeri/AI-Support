@@ -53,10 +53,23 @@ class AIDecisionRaw(BaseModel):
         description="English developer-facing investigation report",
     )
 
-    @field_validator("message_for_user", "message_for_admin", "report_for_system")
+    @field_validator(
+        "message_for_user",
+        "message_for_admin",
+        "report_for_system",
+        "tool_calls",
+        mode="before",
+    )
     @classmethod
-    def strip_strings(cls, value: str) -> str:
-        return value.strip() if isinstance(value, str) else value
+    def coerce_nullables(cls, value: Any, info) -> Any:
+        # Models/providers sometimes emit JSON null for unused string fields.
+        if info.field_name == "tool_calls" and value is None:
+            return []
+        if value is None:
+            return ""
+        if info.field_name != "tool_calls" and isinstance(value, str):
+            return value.strip()
+        return value
 
     @model_validator(mode="after")
     def validate_by_action(self) -> AIDecisionRaw:
