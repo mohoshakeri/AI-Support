@@ -39,6 +39,20 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 Docs: `http://localhost:8000/docs`
 
+## Deploy (Docker)
+
+One container: Nginx on `:80` → Uvicorn. Redis is external (set `REDIS_URL` in `.env`).
+
+```bash
+cp .env.example .env
+# set API_KEY, OPENROUTER_API_KEY, REDIS_URL
+docker build -t ai-support:latest .
+docker run -d --name ai-support -p 80:80 --env-file .env ai-support:latest
+```
+
+- Health: `GET /health`
+- Mirrors: `mirror-docker.runflare.com`, `mirror-pypi.runflare.com`, `mirror-linux.runflare.com`
+
 ## Endpoints
 
 ### `POST /support` → `202`
