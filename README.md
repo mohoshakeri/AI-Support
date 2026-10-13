@@ -4,6 +4,10 @@ Async customer-support agent built with **FastAPI**, **Redis**, and **OpenRouter
 
 External systems submit a support ticket, receive a `job_id` immediately, then poll until the agent finishes (`DONE` / `WAITING` / `PASS` / `ERR`).
 
+> **Warning — do not trust the AI for access control.**  
+> Authorization must be enforced by **your tool APIs**, not by model behavior or prompts.  
+> Every tool request from this service forwards `SUPPORT_TOOL_KEY` (also sent as `Support-Tool-Key`). Your backends must validate that key, bind each call to the authenticated subject (e.g. the real `user_id` from your session/token — not values invented in chat), and reject cross-account or privileged reads/writes. The model can choose tool ids and arguments, including wrong `user_id`s; treat that as untrusted input.
+
 ## Features
 
 - Single async submit endpoint + poll endpoint
